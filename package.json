@@ -7,6 +7,12 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.6.1",
+    "@mantine/core": "^4.2.12",
+    "@mantine/dates": "^4.2.12",
+    "@mantine/form": "^4.2.12",
+    "@mantine/hooks": "^4.2.12",
+    "@mantine/next": "^4.2.12",
+    "dayjs": "^1.11.3",
     "next": "latest",
     "next-themes": "^0.2.0",
     "react": "^17.0.2",
