@@ -39,14 +39,6 @@ export default function AppShellDemo() {
 
   return (
     <AppShell
-      styles={{
-        main: {
-          background:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-        },
-      }}
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
       fixed
@@ -56,13 +48,19 @@ export default function AppShellDemo() {
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 200, lg: 300 }}
+          sx={{ borderStyle: 'none' }}
         >
           <Text>Application navbar</Text>
         </Navbar>
       }
       aside={
         <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-          <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
+          <Aside
+            p="md"
+            hiddenBreakpoint="sm"
+            width={{ sm: 200, lg: 300 }}
+            sx={{ borderStyle: 'none' }}
+          >
             <Group position="right">
               <Menu
                 placement="end"
@@ -74,7 +72,7 @@ export default function AppShellDemo() {
                     placement="center"
                     withArrow
                   >
-                    <ActionIcon variant="default" size={'md'}>
+                    <ActionIcon variant="light" size={'lg'}>
                       <DotsVertical />
                     </ActionIcon>
                   </Tooltip>
@@ -140,8 +138,22 @@ export default function AppShellDemo() {
         </MediaQuery>
       }
       header={
-        <Header height={50}>
+        <Header height={70} p="md" sx={{ borderStyle: 'none' }}>
+          <div
+            style={{ display: 'flex', alignItems: 'center', height: '100%' }}
+          >
+            <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+              <Burger
+                opened={opened}
+                onClick={() => setOpened((o) => !o)}
+                size="sm"
+                color={theme.colors.gray[6]}
+                mr="xl"
+              />
+            </MediaQuery>
 
+            <Text>Application header</Text>
+          </div>
         </Header>
       }
     >
