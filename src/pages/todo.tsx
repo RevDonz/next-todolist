@@ -10,6 +10,7 @@ import {
   Title,
   Text,
   useMantineColorScheme,
+  useMantineTheme,
 } from '@mantine/core'
 
 import { DatePicker } from '@mantine/dates'
@@ -31,6 +32,7 @@ interface todo {
 }
 
 export default function Todo() {
+  const theme = useMantineTheme()
   const [opened, setOpened] = useState(false)
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const [value, setValue] = useLocalStorage<todo[]>({
@@ -106,7 +108,6 @@ export default function Todo() {
         It's {getCurrentDay()}, {getCurrentDate()} {getCurrentMonth()}
       </Text>
       <Paper
-        shadow={'xs'}
         mb={20}
         p={'md'}
         radius={'md'}
@@ -114,27 +115,29 @@ export default function Todo() {
           backgroundColor:
             theme.colorScheme === 'dark'
               ? theme.colors.dark[8]
-              : theme.colors.dark[0],
+              : theme.colors.gray[0],
         })}
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Grid align={'center'} columns={24}>
+          <Grid align={'center'}>
             <Grid.Col span={1}>
               <Center>
                 <Checkbox
+                  size="md"
                   {...form.getInputProps('checked', { type: 'checkbox' })}
                 />
               </Center>
             </Grid.Col>
-            <Grid.Col span={17}>
+            <Grid.Col span={9}>
               <TextInput
                 variant="unstyled"
                 placeholder="Write a new task"
                 width={'full'}
+                size='md'
                 {...form.getInputProps('content')}
               />
             </Grid.Col>
-            <Grid.Col span={6}>
+            <Grid.Col span={2}>
               {/* <Select
                 placeholder="Pick one"
                 data={[
@@ -162,13 +165,13 @@ export default function Todo() {
                   : theme.white,
             })}
           >
-            <Grid align={'center'} columns={24}>
+            <Grid align={'center'}>
               <Grid.Col span={1}>
                 <Center>
-                  <Checkbox checked={item.checked} />
+                  <Checkbox checked={item.checked} size="md" />
                 </Center>
               </Grid.Col>
-              <Grid.Col span={17}>
+              <Grid.Col span={9}>
                 <TextInput
                   variant="unstyled"
                   placeholder="Write a new task"
@@ -184,7 +187,6 @@ export default function Todo() {
                   clearable={false}
                 />
               </Grid.Col>
-              <Grid.Col span={2}></Grid.Col>
             </Grid>
           </Paper>
         ))}
