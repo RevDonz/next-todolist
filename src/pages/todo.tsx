@@ -9,6 +9,7 @@ import {
   Center,
   Title,
   Text,
+  useMantineColorScheme,
 } from '@mantine/core'
 
 import { DatePicker } from '@mantine/dates'
@@ -16,7 +17,12 @@ import { DatePicker } from '@mantine/dates'
 import RightSide from '@/components/Aside'
 import { useForm } from '@mantine/form'
 import { randomId, useLocalStorage } from '@mantine/hooks'
-import { getCurrentDate, getCurrentDay, getCurrentMonth, getTimeOfDay } from '@/utils/getTimes'
+import {
+  getCurrentDate,
+  getCurrentDay,
+  getCurrentMonth,
+  getTimeOfDay,
+} from '@/utils/getTimes'
 
 interface todo {
   checked: boolean
@@ -26,6 +32,7 @@ interface todo {
 
 export default function Todo() {
   const [opened, setOpened] = useState(false)
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const [value, setValue] = useLocalStorage<todo[]>({
     key: 'listTodo',
   })
@@ -43,8 +50,6 @@ export default function Todo() {
     form.reset()
   }
 
-  
-
   return (
     <AppShell
       navbarOffsetBreakpoint="sm"
@@ -57,7 +62,10 @@ export default function Todo() {
           hiddenBreakpoint="sm"
           hidden={!opened}
           width={{ sm: 500 }}
-          sx={{ borderStyle: 'none' }}
+          sx={(theme) => ({
+            borderStyle: 'none',
+            background: colorScheme === 'light' ? theme.colors.gray[2] : '',
+          })}
         >
           <Paper
             shadow={'xs'}
@@ -144,7 +152,6 @@ export default function Todo() {
         value.reverse().map((item, index) => (
           <Paper
             key={index}
-            shadow={'xs'}
             p={'md'}
             mb={10}
             radius={'md'}
@@ -152,7 +159,7 @@ export default function Todo() {
               backgroundColor:
                 theme.colorScheme === 'dark'
                   ? theme.colors.dark[8]
-                  : theme.colors.dark[0],
+                  : theme.white,
             })}
           >
             <Grid align={'center'} columns={24}>

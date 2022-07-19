@@ -4,10 +4,12 @@ import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
+  useMantineTheme,
 } from '@mantine/core'
 import { useHotkeys, useLocalStorage } from '@mantine/hooks'
 
 export default function App(props: AppProps) {
+  const theme = useMantineTheme()
   const { Component, pageProps } = props
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: 'color-scheme',
@@ -42,7 +44,13 @@ export default function App(props: AppProps) {
             colorScheme: colorScheme,
           }}
         >
-          <Component {...pageProps} />
+          <div
+            style={{
+              background: colorScheme === 'light' ? theme.colors.gray[2] : '',
+            }}
+          >
+            <Component {...pageProps} />
+          </div>
         </MantineProvider>
       </ColorSchemeProvider>
     </>

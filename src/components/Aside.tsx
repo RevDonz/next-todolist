@@ -35,7 +35,10 @@ const RightSide = () => {
         p="md"
         hiddenBreakpoint="sm"
         width={{ sm: 100, lg: 200 }}
-        sx={{ borderStyle: 'none' }}
+        sx={(theme) => ({
+          borderStyle: 'none',
+          background: colorScheme === 'light' ? theme.colors.gray[2] : '',
+        })}
       >
         <Group position="right">
           <Menu
