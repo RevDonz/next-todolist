@@ -7,6 +7,8 @@ import {
   Paper,
   Grid,
   Center,
+  Title,
+  Text,
 } from '@mantine/core'
 
 import { DatePicker } from '@mantine/dates'
@@ -14,6 +16,7 @@ import { DatePicker } from '@mantine/dates'
 import RightSide from '@/components/Aside'
 import { useForm } from '@mantine/form'
 import { randomId, useLocalStorage } from '@mantine/hooks'
+import { getCurrentDate, getCurrentDay, getCurrentMonth, getTimeOfDay } from '@/utils/getTimes'
 
 interface todo {
   checked: boolean
@@ -40,10 +43,13 @@ export default function Todo() {
     form.reset()
   }
 
+  
+
   return (
     <AppShell
       navbarOffsetBreakpoint="sm"
       asideOffsetBreakpoint="sm"
+      padding={'xl'}
       fixed
       navbar={
         <Navbar
@@ -87,6 +93,10 @@ export default function Todo() {
       //   </Header>
       // }
     >
+      <Title>Good {getTimeOfDay()}, Doni</Title>
+      <Text>
+        It's {getCurrentDay()}, {getCurrentDate()} {getCurrentMonth()}
+      </Text>
       <Paper
         shadow={'xs'}
         mb={20}
