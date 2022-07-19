@@ -1,6 +1,5 @@
 import type { NextPage } from 'next'
 import React, { useState } from 'react'
-import ThemeSwitcher from '../styles/components/navbar/ThemeSwitcher'
 
 const Home: NextPage = () => {
   const [tasks, setTasks] = useState<string[]>([])
@@ -15,7 +14,6 @@ const Home: NextPage = () => {
   return (
     <div className="dark:bg-dark h-screen font-poppins">
       <div className="flex flex-col justify-center items-center h-full max-w-5xl mx-auto px-4">
-        <ThemeSwitcher />
         <form className="sm:w-2/3 lg:w-1/2 w-full" onSubmit={submitHandler}>
           <div className="px-3 py-2 bg-slate-200 placeholder-slate-500 rounded-xl mb-3">
             <input

@@ -5,7 +5,7 @@ import {
   ColorSchemeProvider,
   ColorScheme,
 } from '@mantine/core'
-import { useLocalStorage } from '@mantine/hooks'
+import { useHotkeys, useLocalStorage } from '@mantine/hooks'
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props
@@ -17,6 +17,7 @@ export default function App(props: AppProps) {
 
   const toggleColorScheme = () =>
     setColorScheme((current) => (current === 'dark' ? 'light' : 'dark'))
+  useHotkeys([['mod+J', () => toggleColorScheme()]])
 
   return (
     <>
