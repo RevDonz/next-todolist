@@ -16,7 +16,7 @@ import {
 import { DatePicker } from '@mantine/dates'
 
 import RightSide from '@/components/Aside'
-import { useForm } from '@mantine/form'
+// import { useForm } from '@mantine/form'
 import { randomId, useLocalStorage } from '@mantine/hooks'
 import {
   getCurrentDate,
@@ -25,7 +25,9 @@ import {
   getTimeOfDay,
 } from '@/utils/getTimes'
 
-interface todo {
+import { useForm, useWatch } from 'react-hook-form'
+
+interface Todo {
   checked: boolean
   content: string
   key: string
@@ -35,22 +37,46 @@ export default function Todo() {
   const theme = useMantineTheme()
   const [opened, setOpened] = useState(false)
   const { colorScheme, toggleColorScheme } = useMantineColorScheme()
-  const [value, setValue] = useLocalStorage<todo[]>({
+  const [value, setValue] = useLocalStorage<Todo[]>({
     key: 'listTodo',
   })
 
-  const form = useForm({
-    initialValues: {
+  // const form = useForm({
+  //   initialValues: {
+  //     checked: false,
+  //     content: '',
+  //     key: randomId(),
+  //   },
+  // })
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    getValues,
+    formState: { errors },
+  } = useForm<Todo>()
+
+  const todoSubmit = handleSubmit(async (data) => {
+    setValue((prev) => (value ? [...prev, data] : [data]))
+    reset({
       checked: false,
       content: '',
-      key: randomId(),
-    },
+    })
   })
 
-  const handleSubmit = (values: typeof form.values) => {
-    setValue((prev) => (value ? [...prev, values] : [values]))
-    form.reset()
-  }
+  useWatch({
+    name: 'checked',
+    control,
+  })
+
+  console.log(getValues('checked'))
+
+  // const handleSubmit = (values: typeof form.values) => {
+  // setValue((prev) => (value ? [...prev, values] : [values]))
+  //   form.reset()
+  // }
 
   return (
     <AppShell
@@ -107,24 +133,25 @@ export default function Todo() {
       <Text>
         It's {getCurrentDay()}, {getCurrentDate()} {getCurrentMonth()}
       </Text>
-      <Paper
-        mb={20}
-        p={'md'}
-        radius={'md'}
-        sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-        })}
-      >
-        <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={todoSubmit}>
+        <Paper
+          mb={20}
+          p={'md'}
+          radius={'md'}
+          sx={(theme) => ({
+            backgroundColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[8]
+                : theme.colors.gray[0],
+          })}
+        >
           <Grid align={'center'}>
             <Grid.Col span={1}>
               <Center>
                 <Checkbox
                   size="md"
-                  {...form.getInputProps('checked', { type: 'checkbox' })}
+                  // {...form.getInputProps('checked', { type: 'checkbox' })}
+                  {...register('checked')}
                 />
               </Center>
             </Grid.Col>
@@ -133,8 +160,9 @@ export default function Todo() {
                 variant="unstyled"
                 placeholder="Write a new task"
                 width={'full'}
-                size='md'
-                {...form.getInputProps('content')}
+                size="md"
+                // {...form.getInputProps('content')}
+                {...register('content')}
               />
             </Grid.Col>
             <Grid.Col span={2}>
@@ -149,8 +177,8 @@ export default function Todo() {
               /> */}
             </Grid.Col>
           </Grid>
-        </form>
-      </Paper>
+        </Paper>
+      </form>
       {value &&
         value.reverse().map((item, index) => (
           <Paper
@@ -172,12 +200,13 @@ export default function Todo() {
                 </Center>
               </Grid.Col>
               <Grid.Col span={9}>
-                <TextInput
-                  variant="unstyled"
-                  placeholder="Write a new task"
-                  width={'full'}
-                  value={item.content}
-                />
+                <Text
+                  sx={{
+                    textDecorationLine: item.checked ? 'line-through' : '',
+                  }}
+                >
+                  {item.content}
+                </Text>
               </Grid.Col>
               <Grid.Col span={2}>
                 <DatePicker
