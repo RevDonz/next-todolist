@@ -1,51 +1,149 @@
-import type { NextPage } from 'next'
-import React, { useState } from 'react'
+import {
+  AppShell,
+  TextInput,
+  Checkbox,
+  Paper,
+  Grid,
+  Center,
+  Title,
+  Text,
+} from '@mantine/core'
+import { DatePicker } from '@mantine/dates'
+import { useLocalStorage } from '@mantine/hooks'
 
-const Home: NextPage = () => {
-  const [tasks, setTasks] = useState<string[]>([])
-  const [todo, setTodo] = useState<string>('')
+import {
+  getCurrentDate,
+  getCurrentDay,
+  getCurrentMonth,
+  getTimeOfDay,
+} from '@/utils/getTimes'
 
-  const submitHandler = (e: React.SyntheticEvent) => {
-    e.preventDefault()
-    setTasks((prev) => [...prev, todo])
-    setTodo('')
-  }
+import RightSide from '@/components/Aside'
+import SideNavbar from '@/components/Navbar'
+import { useForm, useWatch } from 'react-hook-form'
 
-  return (
-    <div className="dark:bg-dark h-screen font-poppins">
-      <div className="flex flex-col justify-center items-center h-full max-w-5xl mx-auto px-4">
-        <form className="sm:w-2/3 lg:w-1/2 w-full" onSubmit={submitHandler}>
-          <div className="px-3 py-2 bg-slate-200 placeholder-slate-500 rounded-xl mb-3">
-            <input
-              type="text"
-              placeholder="Write a new task"
-              className="px-2 py-1 bg-transparent focus:ring-transparent border-none form-input w-full"
-              maxLength={40}
-              value={todo}
-              onChange={(e) => setTodo(e.target.value)}
-            />
-          </div>
-          {tasks.map((tes, index) => {
-            return (
-              <div className="px-3 py-2 bg-white placeholder-slate-500 rounded-xl mb-2">
-                <input
-                  id={`todo${index}`}
-                  type="checkbox"
-                  className="form-checkbox rounded ml-2 my-2 p-2 peer checked:text-indigo-600 focus:ring-indigo-600 transition duration-300"
-                />
-                <label
-                  className="p-2 peer-checked:line-through decoration-2 decoration-indigo-600"
-                  htmlFor={`todo${index}`}
-                >
-                  {tes}
-                </label>
-              </div>
-            )
-          })}
-        </form>
-      </div>
-    </div>
-  )
+interface Todo {
+  checked: boolean
+  content: string
+  key: string
 }
 
-export default Home
+export default function Todo() {
+  const [value, setValue] = useLocalStorage<Todo[]>({
+    key: 'listTodo',
+  })
+
+  const { register, handleSubmit, reset, control, getValues } = useForm<Todo>()
+
+  const todoSubmit = handleSubmit(async (data) => {
+    setValue((prev) => (value ? [...prev, data] : [data]))
+    reset({
+      checked: false,
+      content: '',
+    })
+  })
+
+  useWatch({
+    name: 'checked',
+    control,
+  })
+
+  console.log(getValues('checked'))
+
+  return (
+    <AppShell
+      navbarOffsetBreakpoint="sm"
+      asideOffsetBreakpoint="sm"
+      padding={'xl'}
+      fixed
+      navbar={<SideNavbar />}
+      aside={<RightSide />}
+    >
+      <Title>Good {getTimeOfDay()}, Doni</Title>
+      <Text>
+        It's {getCurrentDay()}, {getCurrentDate()} {getCurrentMonth()}
+      </Text>
+      <form onSubmit={todoSubmit}>
+        <Paper
+          mb={20}
+          p={'md'}
+          radius={'md'}
+          sx={(theme) => ({
+            backgroundColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[8]
+                : theme.colors.gray[0],
+          })}
+        >
+          <Grid align={'center'}>
+            <Grid.Col span={1}>
+              <Center>
+                <Checkbox size="md" {...register('checked')} />
+              </Center>
+            </Grid.Col>
+            <Grid.Col span={9}>
+              <TextInput
+                variant="unstyled"
+                placeholder="Write a new task"
+                width={'full'}
+                size="md"
+                {...register('content')}
+              />
+            </Grid.Col>
+            <Grid.Col span={2}>
+              {/* <Select
+                placeholder="Pick one"
+                data={[
+                  { value: 'react', label: 'React' },
+                  { value: 'ng', label: 'Angular' },
+                  { value: 'svelte', label: 'Svelte' },
+                  { value: 'vue', label: 'Vue' },
+                ]}
+              /> */}
+            </Grid.Col>
+          </Grid>
+        </Paper>
+      </form>
+      {value &&
+        value.reverse().map((item, index) => (
+          <Paper
+            key={index}
+            p={'md'}
+            mb={10}
+            radius={'md'}
+            sx={(theme) => ({
+              backgroundColor:
+                theme.colorScheme === 'dark'
+                  ? theme.colors.dark[8]
+                  : theme.white,
+            })}
+          >
+            <Grid align={'center'}>
+              <Grid.Col span={1}>
+                <Center>
+                  <Checkbox checked={item.checked} size="md" />
+                </Center>
+              </Grid.Col>
+              <Grid.Col span={9}>
+                <Text
+                  sx={{
+                    textDecorationLine: item.checked ? 'line-through' : '',
+                  }}
+                >
+                  {item.content}
+                </Text>
+              </Grid.Col>
+              <Grid.Col span={2}>
+                <DatePicker
+                  placeholder="Pick date"
+                  radius={'md'}
+                  inputFormat="MMM DD"
+                  clearable={false}
+                />
+              </Grid.Col>
+            </Grid>
+          </Paper>
+        ))}
+    </AppShell>
+  )
+}
