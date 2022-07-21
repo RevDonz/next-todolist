@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {
   AppShell,
-  Navbar,
   TextInput,
   Checkbox,
   Paper,
@@ -9,14 +8,12 @@ import {
   Center,
   Title,
   Text,
-  useMantineColorScheme,
   useMantineTheme,
 } from '@mantine/core'
 
 import { DatePicker } from '@mantine/dates'
 
 import RightSide from '@/components/Aside'
-// import { useForm } from '@mantine/form'
 import { randomId, useLocalStorage } from '@mantine/hooks'
 import {
   getCurrentDate,
@@ -26,6 +23,7 @@ import {
 } from '@/utils/getTimes'
 
 import { useForm, useWatch } from 'react-hook-form'
+import SideNavbar from '@/components/Navbar'
 
 interface Todo {
   checked: boolean
@@ -36,7 +34,6 @@ interface Todo {
 export default function Todo() {
   const theme = useMantineTheme()
   const [opened, setOpened] = useState(false)
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
   const [value, setValue] = useLocalStorage<Todo[]>({
     key: 'listTodo',
   })
@@ -84,50 +81,8 @@ export default function Todo() {
       asideOffsetBreakpoint="sm"
       padding={'xl'}
       fixed
-      navbar={
-        <Navbar
-          p="md"
-          hiddenBreakpoint="sm"
-          hidden={!opened}
-          width={{ sm: 500 }}
-          sx={(theme) => ({
-            borderStyle: 'none',
-            background: colorScheme === 'light' ? theme.colors.gray[2] : '',
-          })}
-        >
-          <Paper
-            shadow={'xs'}
-            p={'md'}
-            radius={'md'}
-            sx={(theme) => ({
-              backgroundColor:
-                theme.colorScheme === 'dark'
-                  ? theme.colors.dark[8]
-                  : theme.colors.dark[0],
-            })}
-          ></Paper>
-        </Navbar>
-      }
+      navbar={<SideNavbar />}
       aside={<RightSide />}
-      // header={
-      //   <Header height={70} p="md" sx={{ borderStyle: 'none' }}>
-      //     <div
-      //       style={{ display: 'flex', alignItems: 'center', height: '100%' }}
-      //     >
-      //       <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-      //         <Burger
-      //           opened={opened}
-      //           onClick={() => setOpened((o) => !o)}
-      //           size="sm"
-      //           color={theme.colors.gray[6]}
-      //           mr="xl"
-      //         />
-      //       </MediaQuery>
-
-      //       <Text>Application header</Text>
-      //     </div>
-      //   </Header>
-      // }
     >
       <Title>Good {getTimeOfDay()}, Doni</Title>
       <Text>
