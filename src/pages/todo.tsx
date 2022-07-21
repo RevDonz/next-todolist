@@ -129,7 +129,7 @@ export default function Todo() {
       //   </Header>
       // }
     >
-      <Title>Good {getTimeOfDay()}, a Doni</Title>
+      <Title>Good {getTimeOfDay()}, Doni</Title>
       <Text>
         It's {getCurrentDay()}, {getCurrentDate()} {getCurrentMonth()}
       </Text>
