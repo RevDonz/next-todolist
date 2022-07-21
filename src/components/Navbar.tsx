@@ -1,7 +1,7 @@
 import { Navbar, Paper, useMantineColorScheme } from '@mantine/core'
 
 const SideNavbar = () => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
+  const { colorScheme } = useMantineColorScheme()
 
   return (
     <Navbar

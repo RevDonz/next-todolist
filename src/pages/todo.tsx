@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
   AppShell,
   TextInput,
@@ -10,11 +10,9 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core'
-
 import { DatePicker } from '@mantine/dates'
+import { useLocalStorage } from '@mantine/hooks'
 
-import RightSide from '@/components/Aside'
-import { randomId, useLocalStorage } from '@mantine/hooks'
 import {
   getCurrentDate,
   getCurrentDay,
@@ -22,8 +20,9 @@ import {
   getTimeOfDay,
 } from '@/utils/getTimes'
 
-import { useForm, useWatch } from 'react-hook-form'
+import RightSide from '@/components/Aside'
 import SideNavbar from '@/components/Navbar'
+import { useForm, useWatch } from 'react-hook-form'
 
 interface Todo {
   checked: boolean
@@ -32,28 +31,11 @@ interface Todo {
 }
 
 export default function Todo() {
-  const theme = useMantineTheme()
-  const [opened, setOpened] = useState(false)
   const [value, setValue] = useLocalStorage<Todo[]>({
     key: 'listTodo',
   })
 
-  // const form = useForm({
-  //   initialValues: {
-  //     checked: false,
-  //     content: '',
-  //     key: randomId(),
-  //   },
-  // })
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    getValues,
-    formState: { errors },
-  } = useForm<Todo>()
+  const { register, handleSubmit, reset, control, getValues } = useForm<Todo>()
 
   const todoSubmit = handleSubmit(async (data) => {
     setValue((prev) => (value ? [...prev, data] : [data]))
@@ -69,11 +51,6 @@ export default function Todo() {
   })
 
   console.log(getValues('checked'))
-
-  // const handleSubmit = (values: typeof form.values) => {
-  // setValue((prev) => (value ? [...prev, values] : [values]))
-  //   form.reset()
-  // }
 
   return (
     <AppShell
@@ -103,11 +80,7 @@ export default function Todo() {
           <Grid align={'center'}>
             <Grid.Col span={1}>
               <Center>
-                <Checkbox
-                  size="md"
-                  // {...form.getInputProps('checked', { type: 'checkbox' })}
-                  {...register('checked')}
-                />
+                <Checkbox size="md" {...register('checked')} />
               </Center>
             </Grid.Col>
             <Grid.Col span={9}>
@@ -116,7 +89,6 @@ export default function Todo() {
                 placeholder="Write a new task"
                 width={'full'}
                 size="md"
-                // {...form.getInputProps('content')}
                 {...register('content')}
               />
             </Grid.Col>
